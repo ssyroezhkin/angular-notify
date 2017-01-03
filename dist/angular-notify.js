@@ -36,7 +36,8 @@ angular.module('cgNotify', []).factory('notify',['$timeout','$http','$compile','
                 }
             }
 
-            $http.get(args.templateUrl,{cache: $templateCache}).success(function(template){
+            $http.get(args.templateUrl,{cache: $templateCache}).then(function onSuccess(response){
+                var template = response.data;
 
                 var templateElement = $compile(template)(scope);
                 templateElement.bind('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function(e){
@@ -107,8 +108,8 @@ angular.module('cgNotify', []).factory('notify',['$timeout','$http','$compile','
                     },args.duration);
                 }
 
-            }).error(function(data){
-                    throw new Error('Template specified for cgNotify ('+args.templateUrl+') could not be loaded. ' + data);
+            }).catch(function(response){
+                throw new Error('Template specified for cgNotify ('+args.templateUrl+') could not be loaded. ' + response.data);
             });
 
             var retVal = {};
